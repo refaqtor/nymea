@@ -36,6 +36,7 @@
 #include "integrations/thing.h"
 #include "integrations/thingdescriptor.h"
 #include "integrations/pluginmetadata.h"
+#include "integrations/ioconnection.h"
 
 #include "types/thingclass.h"
 #include "types/interface.h"
@@ -113,6 +114,8 @@ public:
     BrowserActionInfo *executeBrowserItem(const BrowserAction &browserAction) override;
     BrowserItemActionInfo *executeBrowserItemAction(const BrowserItemAction &browserItemAction) override;
 
+    Thing::ThingError connectIO(const IOConnection &connection) override;
+
     QString translate(const PluginId &pluginId, const QString &string, const QLocale &locale) override;
     ParamType translateParamType(const PluginId &pluginId, const ParamType &paramType, const QLocale &locale) override;
     ThingClass translateThingClass(const ThingClass &thingClass, const QLocale &locale) override;
@@ -173,6 +176,8 @@ private:
         QString thingName;
     };
     QHash<PairingTransactionId, PairingContext> m_pendingPairings;
+
+    QHash<ThingId, IOConnection> m_ioConnections;
 };
 
 #endif // THINGMANAGERIMPLEMENTATION_H

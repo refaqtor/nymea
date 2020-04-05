@@ -381,6 +381,26 @@ void PluginMetadata::parse(const QJsonObject &jsonObject)
                 if (st.contains("cached")) {
                     stateType.setCached(st.value("cached").toBool());
                 }
+
+                if (st.contains("ioType")) {
+                    QString ioType = st.value("ioType").toString();
+                    QStringList ioTypes = {"digitalInput", "digitalOutput", "analogInput", "analogOutput"};
+                    if (!ioTypes.contains(ioType)) {
+                        m_validationErrors.append("Thing class \"" + thingClass.name() + "\" state type \"" + stateTypeName + "\" has invalid ioType value \"" + ioType + "\" which is not any of the allowed values in [" + ioTypes.join(", ") + "]");
+                        hasError = true;
+                        break;
+                    }
+                    if (ioType.startsWith("digital") && stateType.type() != QVariant::Bool) {
+                        m_validationErrors.append("Thing class \"" + thingClass.name() + "\" state type \"" + stateTypeName + "\" is marked as digital IO but type is not \"bool\"");
+                        hasError = true;
+                        break;
+                    }
+                    if (ioType.startsWith("analog") && stateType.type() != QVariant::Double) {
+                        m_validationErrors.append("Thing class \"" + thingClass.name() + "\" state type \"" + stateTypeName + "\" is marked as analog IO but type is not \"double\"");
+                        hasError = true;
+                        break;
+                    }
+                }
                 stateTypes.append(stateType);
 
                 // Events for state changed (Not checking for duplicate UUID, this is expected to be the same as the state!)

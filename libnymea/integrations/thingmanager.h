@@ -35,6 +35,7 @@
 
 #include "thing.h"
 #include "integrationplugin.h"
+#include "ioconnection.h"
 #include "types/interface.h"
 #include "types/vendor.h"
 #include "types/browseritem.h"
@@ -88,6 +89,9 @@ public:
     virtual BrowserItemResult* browserItemDetails(const ThingId &thingId, const QString &itemId, const QLocale &locale) = 0;
     virtual BrowserActionInfo* executeBrowserItem(const BrowserAction &browserAction) = 0;
     virtual BrowserItemActionInfo* executeBrowserItemAction(const BrowserItemAction &browserItemAction) = 0;
+
+    virtual Thing::ThingError connectIO(const IOConnection &connection) = 0;
+    Thing::ThingError connectIO(const ThingId &inputThing, const StateId &inputState, const ThingId &outputThing, const StateId &outputState);
 
     virtual QString translate(const PluginId &pluginId, const QString &string, const QLocale &locale) = 0;
     virtual ParamType translateParamType(const PluginId &pluginId, const ParamType &paramType, const QLocale &locale) = 0;

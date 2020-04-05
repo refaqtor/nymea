@@ -189,7 +189,7 @@ QStringList StateType::typeProperties()
 {
     return QStringList() << "id" << "name" << "displayName" << "displayNameEvent" << "type" << "defaultValue"
                          << "cached" << "unit" << "minValue" << "maxValue" << "possibleValues" << "writable"
-                         << "displayNameAction";
+                         << "displayNameAction" << "ioType";
 }
 
 /*! Returns a list of mandatory properties a DeviceClass definition must have. */

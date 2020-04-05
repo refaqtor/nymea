@@ -868,6 +868,63 @@
                     "displayName": "Mocked Thing (User & Password)",
                     "createMethods": ["discovery", "user"],
                     "setupMethod": "userandpassword"
+                },
+                {
+                    "id": "7cbd729a-465b-4ccb-b59c-5733039dbbed",
+                    "name": "genericIoMock",
+                    "displayName": "Generic IO pins",
+                    "createMethods": ["user"],
+                    "setupMethod": "justAdd",
+                    "stateTypes": [
+                        {
+                            "id": "07165c12-4d53-45c0-8bf1-34618443b706",
+                            "name": "digitalInput1",
+                            "displayName": "Digital input 1",
+                            "displayNameEvent": "Digital input 1 changed",
+                            "type": "bool",
+                            "defaultValue": false,
+                            "ioType": "digitalInput"
+                        },
+                        {
+                            "id": "0a4362ba-a086-4540-84ba-107ef7b99ed8",
+                            "name": "digitalInput2",
+                            "displayName": "Digital input 2",
+                            "displayNameEvent": "Digital input 2 changed",
+                            "type": "bool",
+                            "defaultValue": false,
+                            "ioType": "digitalInput"
+                        },
+                        {
+                            "id": "d6fcdb52-f7c3-423b-b9f5-1e29f164c42e",
+                            "name:": "digitalOutput1",
+                            "displayName": "Digital Output 1",
+                            "displayNameEvent": "Digital Output 1 changed",
+                            "type": "bool",
+                            "defaultValue": false,
+                            "ioType": "digitalOutput"
+                        }
+                    ]
+                },
+                {
+                    "id": "98ab137e-757e-43f8-9d9b-5d50d990242a",
+                    "name": "virtualIoLightMock",
+                    "displayName": "Generic Light",
+                    "createMethods": ["user"],
+                    "setupMethod": "justAdd",
+                    "interfaces": ["light"],
+                    "stateTypes": [
+                        {
+                            "id": "d1917b3d-1530-4cf9-90f7-263ee88e714b",
+                            "name": "power",
+                            "displayName": "Power",
+                            "displayNameEvent": "Power changed",
+                            "displayNameAction": "Set power",
+                            "type": "bool",
+                            "defaultValue": false,
+                            "ioType": "digitalInput",
+                            "writable": true
+                        }
+                    ]
                 }
             ]
         }

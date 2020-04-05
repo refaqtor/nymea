@@ -902,6 +902,17 @@ BrowserItemActionInfo* ThingManagerImplementation::executeBrowserItemAction(cons
     return info;
 }
 
+Thing::ThingError ThingManagerImplementation::connectIO(const IOConnection &connection)
+{
+    // Do some sanity checks
+    Thing *inputThing = m_configuredThing.value(connection.inputThing());
+    if (!inputThing) {
+        qCWarning(dcThingManager()) << "Could not find inputThing in configured things. Not adding IO connection.";
+        return Thing::ThingErrorThingNotFound;
+    }
+    Thing *outputThing = m_configuredThing
+}
+
 QString ThingManagerImplementation::translate(const PluginId &pluginId, const QString &string, const QLocale &locale)
 {
     return m_translator->translate(pluginId, string, locale);
