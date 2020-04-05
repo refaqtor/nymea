@@ -177,7 +177,7 @@ private:
     };
     QHash<PairingTransactionId, PairingContext> m_pendingPairings;
 
-    QHash<ThingId, IOConnection> m_ioConnections;
+    QMultiHash<ThingId, IOConnection> m_ioConnections;
 };
 
 #endif // THINGMANAGERIMPLEMENTATION_H

@@ -233,6 +233,18 @@ void IntegrationPluginMock::setupThing(ThingSetupInfo *info)
         return;
     }
 
+    if (info->thing()->thingClassId() == genericIoMockThingClassId) {
+        qCDebug(dcMock()) << "Generic IO mock setup complete";
+        info->finish(Thing::ThingErrorNoError);
+        return;
+    }
+
+    if (info->thing()->thingClassId() == virtualIoLightMockThingClassId) {
+        qCDebug(dcMock()) << "Virtual IO mock light setup complete";
+        info->finish(Thing::ThingErrorNoError);
+        return;
+    }
+
     qCWarning(dcMock()) << "Unhandled thing class" << info->thing()->thingClass();
     info->finish(Thing::ThingErrorThingClassNotFound);
 }
@@ -689,9 +701,25 @@ void IntegrationPluginMock::executeAction(ThingActionInfo *info)
             info->thing()->setStateValue(inputTypeMockWritableTimestampUIntStateTypeId, info->action().param(inputTypeMockWritableTimestampUIntActionWritableTimestampUIntParamTypeId).value().toULongLong());
         }
         return;
-
     }
-    info->finish(Thing::ThingErrorThingClassNotFound);
+
+    if (info->thing()->thingClassId() == virtualIoLightMockThingClassId) {
+        if (info->action().actionTypeId() == virtualIoLightMockPowerActionTypeId) {
+            info->thing()->setStateValue(virtualIoLightMockPowerStateTypeId, info->action().param(virtualIoLightMockPowerActionPowerParamTypeId).value());
+            info->finish(Thing::ThingErrorNoError);
+            return;
+        }
+    }
+
+    if (info->thing()->thingClassId() == genericIoMockThingClassId) {
+        if (info->action().actionTypeId() == genericIoMockDigitalOutput1ActionTypeId) {
+            info->thing()->setStateValue(genericIoMockDigitalOutput1StateTypeId, info->action().param(genericIoMockDigitalOutput1ActionDigitalOutput1ParamTypeId).value());
+            info->finish(Thing::ThingErrorNoError);
+            return;
+        }
+    }
+
+    qCWarning(dcMock()) << "Unhandled executeAction call in mock plugin!";
 }
 
 void IntegrationPluginMock::executeBrowserItem(BrowserActionInfo *info)
@@ -728,7 +756,6 @@ void IntegrationPluginMock::executeBrowserItem(BrowserActionInfo *info)
 
 void IntegrationPluginMock::executeBrowserItemAction(BrowserItemActionInfo *info)
 {
-    qCDebug(dcMock()) << "TODO" << info << info->browserItemAction().id();
     if (info->browserItemAction().actionTypeId() == mockAddToFavoritesBrowserItemActionTypeId) {
 
         VirtualFsNode *node = m_virtualFs->findNode(info->browserItemAction().itemId());

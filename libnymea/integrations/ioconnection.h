@@ -10,19 +10,19 @@ class IOConnection
     Q_GADGET
 public:
     IOConnection();
-    IOConnection(const ThingId &inputThing, const StateId &inputState, const ThingId &outputThing, const StateId &outputState);
+    IOConnection(const ThingId &inputThing, const StateTypeId &inputState, const ThingId &outputThing, const StateTypeId &outputState);
 
     ThingId inputThing() const;
-    StateId inputState() const;
+    StateTypeId inputState() const;
 
     ThingId outputThing() const;
-    StateId outputState() const;
+    StateTypeId outputState() const;
 
 private:
     ThingId m_inputThing;
-    StateId m_inputState;
+    StateTypeId m_inputState;
     ThingId m_outputThing;
-    StateId m_outputState;
+    StateTypeId m_outputState;
 };
 
 #endif // IOCONNECTION_H

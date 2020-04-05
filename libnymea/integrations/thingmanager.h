@@ -91,7 +91,7 @@ public:
     virtual BrowserItemActionInfo* executeBrowserItemAction(const BrowserItemAction &browserItemAction) = 0;
 
     virtual Thing::ThingError connectIO(const IOConnection &connection) = 0;
-    Thing::ThingError connectIO(const ThingId &inputThing, const StateId &inputState, const ThingId &outputThing, const StateId &outputState);
+    Thing::ThingError connectIO(const ThingId &inputThing, const StateTypeId &inputState, const ThingId &outputThing, const StateTypeId &outputState);
 
     virtual QString translate(const PluginId &pluginId, const QString &string, const QLocale &locale) = 0;
     virtual ParamType translateParamType(const PluginId &pluginId, const ParamType &paramType, const QLocale &locale) = 0;

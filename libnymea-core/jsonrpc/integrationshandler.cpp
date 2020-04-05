@@ -346,6 +346,15 @@ IntegrationsHandler::IntegrationsHandler(ThingManager *thingManager, QObject *pa
     returns.insert("o:displayMessage", enumValueName(String));
     registerMethod("ExecuteBrowserItemAction", description, params, returns);
 
+    params.clear(); returns.clear();
+    description = "Connect two generic IO states.";
+    params.insert("inputThingId", enumValueName(Uuid));
+    params.insert("inputStateTypeId", enumValueName(Uuid));
+    params.insert("outputThingId", enumValueName(Uuid));
+    params.insert("outputStateTypeId", enumValueName(Uuid));
+    returns.insert("thingError", enumRef<Thing::ThingError>());
+    registerMethod("ConnectIO", description, params, returns);
+
     // Notifications
     params.clear(); returns.clear();
     description = "Emitted whenever a state of a thing changes.";
@@ -928,6 +937,16 @@ JsonReply *IntegrationsHandler::ExecuteBrowserItemAction(const QVariantMap &para
     });
 
     return jsonReply;
+}
+
+JsonReply *IntegrationsHandler::ConnectIO(const QVariantMap &params)
+{
+    ThingId inputThingId = params.value("inputThingId").toUuid();
+    StateTypeId inputStateTypeId = params.value("inputStateTypeId").toUuid();
+    ThingId outputThingId = params.value("outputThingId").toUuid();
+    StateTypeId outputStateTypeId = params.value("outputStateTypeId").toUuid();
+    Thing::ThingError error = m_thingManager->connectIO(inputThingId, inputStateTypeId, outputThingId, outputStateTypeId);
+    return createReply(statusToReply(error));
 }
 
 QVariantMap IntegrationsHandler::packBrowserItem(const BrowserItem &item)

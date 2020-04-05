@@ -896,12 +896,14 @@
                         },
                         {
                             "id": "d6fcdb52-f7c3-423b-b9f5-1e29f164c42e",
-                            "name:": "digitalOutput1",
+                            "name": "digitalOutput1",
                             "displayName": "Digital Output 1",
                             "displayNameEvent": "Digital Output 1 changed",
+                            "displayNameAction": "Set Digital Output 1",
                             "type": "bool",
                             "defaultValue": false,
-                            "ioType": "digitalOutput"
+                            "ioType": "digitalOutput",
+                            "writable": true
                         }
                     ]
                 },

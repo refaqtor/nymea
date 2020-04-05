@@ -381,6 +381,9 @@ void PluginMetadata::parse(const QJsonObject &jsonObject)
                 if (st.contains("cached")) {
                     stateType.setCached(st.value("cached").toBool());
                 }
+                if (st.contains("writable")) {
+                    stateType.setWritable(st.value("writable").toBool());
+                }
 
                 if (st.contains("ioType")) {
                     QString ioType = st.value("ioType").toString();
@@ -397,6 +400,11 @@ void PluginMetadata::parse(const QJsonObject &jsonObject)
                     }
                     if (ioType.startsWith("analog") && stateType.type() != QVariant::Double) {
                         m_validationErrors.append("Thing class \"" + thingClass.name() + "\" state type \"" + stateTypeName + "\" is marked as analog IO but type is not \"double\"");
+                        hasError = true;
+                        break;
+                    }
+                    if (ioType.endsWith("Output") && !stateType.writable()) {
+                        m_validationErrors.append("Thing class \"" + thingClass.name() + "\" state type \"" + stateTypeName + "\" is marked as output but is not writable");
                         hasError = true;
                         break;
                     }

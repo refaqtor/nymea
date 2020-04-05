@@ -72,6 +72,8 @@ public:
     Q_INVOKABLE JsonReply *ExecuteBrowserItem(const QVariantMap &params, const JsonContext &context);
     Q_INVOKABLE JsonReply *ExecuteBrowserItemAction(const QVariantMap &params, const JsonContext &context);
 
+    Q_INVOKABLE JsonReply *ConnectIO(const QVariantMap &params);
+
     static QVariantMap packBrowserItem(const BrowserItem &item);
 
 signals:

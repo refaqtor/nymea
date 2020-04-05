@@ -172,6 +172,18 @@ void StateType::setUnit(const Types::Unit &unit)
     m_unit = unit;
 }
 
+/*! Returns whether the StateType is writable or not. A writable StateType will have an according ActionType defined.*/
+bool StateType::writable() const
+{
+    return m_writable;
+}
+
+/*! Sets the writable property to true */
+void StateType::setWritable(bool writable)
+{
+    m_writable = writable;
+}
+
 /*! Returns true if this StateType is to be cached. This means, the last state value will be stored to disk upon shutdown and restored on reboot. If this is false, states will be initialized with the default value on each boot. By default all states are cached by the system. */
 bool StateType::cached() const
 {
@@ -203,6 +215,16 @@ StateTypes::StateTypes(const QList<StateType> &other)
     foreach (const StateType &st, other) {
         append(st);
     }
+}
+
+bool StateTypes::contains(const StateTypeId &stateTypeId)
+{
+    foreach (const StateType &stateType, *this) {
+        if (stateType.id() == stateTypeId) {
+            return true;
+        }
+    }
+    return false;
 }
 
 QVariant StateTypes::get(int index) const

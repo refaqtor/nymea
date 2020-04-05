@@ -905,12 +905,36 @@ BrowserItemActionInfo* ThingManagerImplementation::executeBrowserItemAction(cons
 Thing::ThingError ThingManagerImplementation::connectIO(const IOConnection &connection)
 {
     // Do some sanity checks
-    Thing *inputThing = m_configuredThing.value(connection.inputThing());
+    Thing *inputThing = m_configuredThings.value(connection.inputThing());
     if (!inputThing) {
-        qCWarning(dcThingManager()) << "Could not find inputThing in configured things. Not adding IO connection.";
+        qCWarning(dcThingManager()) << "Could not find inputThing" << connection.inputThing() << "configured things. Not adding IO connection.";
         return Thing::ThingErrorThingNotFound;
     }
-    Thing *outputThing = m_configuredThing
+    if (!inputThing->thingClass().stateTypes().contains(connection.inputState())) {
+        qCWarning(dcThingManager()) << "Input thing" << inputThing->name() << "does not have a state with id" << connection.inputState();
+        return Thing::ThingErrorStateTypeNotFound;
+    }
+    StateType inputStateType = inputThing->thingClass().stateTypes().findById(connection.inputState());
+    // TODO: Check if this is actually an IO
+//    if (inputStateType.ioType())
+
+    Thing *outputThing = m_configuredThings.value(connection.outputThing());
+    if (!outputThing) {
+        qCWarning(dcThingManager()) << "Could not find outputThing" << connection.outputThing() << "configured things. Not adding IO connection.";
+        return Thing::ThingErrorThingNotFound;
+    }
+    if (!outputThing->thingClass().stateTypes().contains(connection.outputState())) {
+        qCWarning(dcThingManager()) << "Output thing" << outputThing->name() << "does not have a state with id" << connection.outputState();
+        return Thing::ThingErrorStateTypeNotFound;
+    }
+    StateType outputStateType = outputThing->thingClass().stateTypes().findById(connection.outputState());
+    // TODO: Check if this is actually an IO
+
+    // TODO: Check if io types are compatible
+//    if (inputStateType.type() != outputStateType)
+
+    m_ioConnections.insert(connection.inputThing(), connection);
+    return Thing::ThingErrorNoError;
 }
 
 QString ThingManagerImplementation::translate(const PluginId &pluginId, const QString &string, const QLocale &locale)
@@ -1617,6 +1641,26 @@ void ThingManagerImplementation::slotThingStateValueChanged(const StateTypeId &s
     Param valueParam(ParamTypeId(stateTypeId.toString()), value);
     Event event(EventTypeId(stateTypeId.toString()), thing->id(), ParamList() << valueParam, true);
     emit eventTriggered(event);
+
+    foreach (const IOConnection &ioConnection, m_ioConnections.values(thing->id())) {
+        if (ioConnection.inputState() == stateTypeId) {
+            Thing *outputThing = m_configuredThings.value(ioConnection.outputThing());
+            if (!outputThing) {
+                qCWarning(dcThingManager()) << "IO connection contains invalid output thing!";
+                continue;
+            }
+            IntegrationPlugin *plugin = m_integrationPlugins.value(outputThing->pluginId());
+            if (!plugin) {
+                qCWarning(dcThingManager()) << "Plugin not found for IO connection's output action.";
+                continue;
+            }
+            Action outputAction(ActionTypeId(ioConnection.outputState()), ioConnection.outputThing());
+            Param outputParam(ioConnection.outputState(), value);
+            outputAction.setParams(ParamList() << outputParam);
+            qCDebug(dcThingManager()) << "Executing IO connection action on" << outputThing->name();
+            executeAction(outputAction);
+        }
+    }
 }
 
 void ThingManagerImplementation::slotThingSettingChanged(const ParamTypeId &paramTypeId, const QVariant &value)

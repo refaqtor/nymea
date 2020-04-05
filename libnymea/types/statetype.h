@@ -83,6 +83,9 @@ public:
     Types::Unit unit() const;
     void setUnit(const Types::Unit &unit);
 
+    bool writable() const;
+    void setWritable(bool writable);
+
     bool cached() const;
     void setCached(bool cached);
 
@@ -100,6 +103,7 @@ private:
     QVariant m_maxValue;
     QVariantList m_possibleValues;
     Types::Unit m_unit = Types::UnitNone;
+    bool m_writable = false;
     bool m_cached = true;
 };
 Q_DECLARE_METATYPE(StateType)
@@ -111,6 +115,7 @@ class StateTypes: public QList<StateType>
 public:
     StateTypes() = default;
     StateTypes(const QList<StateType> &other);
+    bool contains(const StateTypeId &stateTypeId);
     Q_INVOKABLE QVariant get(int index) const;
     Q_INVOKABLE void put(const QVariant &variant);
     StateType findByName(const QString &name);
